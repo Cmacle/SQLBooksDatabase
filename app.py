@@ -34,7 +34,20 @@ def add_csv():
         session.commit()
         
 def add():
-    pass
+    if input("\nUse this to add a new book to the database.\n Would you like to continue? y/n   ").lower() == 'y':
+        new_book = Book()
+        new_book.title = input("What is the title of the book?:    ")
+        new_book.author = input("Who is the author of the book?:    ")
+        while True:
+            date_str = input("When was the book published? format m/d/y ex.4/5/2000  :   ")
+            try:
+                new_book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y")
+            except ValueError:
+                print("Invalid Input")
+            else:
+                break
+
+
 def search():
     pass
 def analysis():
@@ -49,7 +62,8 @@ if __name__ == '__main__':
 
 
     while True:
-        add_csv()
+        
+
         answer = menu()
         if answer == '1':
             add()

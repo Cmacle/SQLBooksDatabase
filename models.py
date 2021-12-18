@@ -2,7 +2,7 @@ from sqlalchemy import (create_engine, Column,
                          Integer, String, Date)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.sqltypes import Float
+from sqlalchemy.sql.sqltypes import Float, Date
 
 
 engine = create_engine('sqlite:///books.db', echo=False)
@@ -16,7 +16,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True)
     title = Column('Title', String)
     author = Column('Author', String)
-    published_date = ('Published', Date)
+    published_date = Column('Published', Date)
     price = Column('Price', Float)
 
     def __repr__(self):
