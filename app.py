@@ -1,5 +1,7 @@
 from models import(Base, session, 
                     Book, engine)
+import csv
+import datetime
 
 def menu():
     
@@ -12,6 +14,25 @@ def menu():
             ''')
     return input("")
 
+def clean_date(date_str):
+    return datetime.datetime.strptime(date_str, '%B %d, %Y').date()
+
+def clean_price(price_str):
+    return float(price_str)
+    
+
+def add_csv():
+    with open('suggested_books.csv') as csvfile:
+        data = csv.reader(csvfile)
+        for row in data:
+            title = row[0]
+            author = row[1]
+            date = clean_date(row[2])
+            price = clean_price(row[3])
+            new_book = Book(title=title, author=author, published_date=date, price=price)
+            session.add(new_book)
+        session.commit()
+        
 def add():
     pass
 def search():
@@ -28,7 +49,7 @@ if __name__ == '__main__':
 
 
     while True:
-    
+        add_csv()
         answer = menu()
         if answer == '1':
             add()
