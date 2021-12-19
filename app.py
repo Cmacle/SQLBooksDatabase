@@ -62,7 +62,27 @@ def add():
         
 
 def search():
-    pass
+    print('''\nWhat would you like to search by?
+            \r1: ID
+            \r2: Title
+            \r3: Author
+            \r4: Date Published
+            \r5: Price
+            '''
+    )
+    answer = input("")
+    if answer == '1':
+        pass
+    if answer == '2':
+        pass
+    if answer == '3':
+        pass
+    if answer == '4':
+        pass
+    if answer == '5':
+        pass
+    else:
+        print("Invalid Input")
     
 def analysis():
     pass
