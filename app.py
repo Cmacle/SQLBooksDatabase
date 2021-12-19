@@ -63,10 +63,14 @@ def add():
 
 def search():
     pass
+    
 def analysis():
     pass
+
 def view():
-    pass
+    for book in session.query(Book):
+        print(f'{book.id}) Title = {book.title} Author = {book.author} Published = {book.published_date} Price = {book.price}')
+    
 
 
 
