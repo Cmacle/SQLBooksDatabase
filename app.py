@@ -41,12 +41,25 @@ def add():
         while True:
             date_str = input("When was the book published? format m/d/y ex.4/5/2000  :   ")
             try:
-                new_book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y")
+                new_book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y").date()
             except ValueError:
                 print("Invalid Input")
             else:
                 break
-
+        while True:
+            try:
+                new_book.price = float(input("What is the cost? No special characters. ex) 29.99:     "))
+            except TypeError:
+                print("Invalid Input")
+            else:
+                break
+        print(new_book)
+        if input("Do you want to add this book?  y/n     ").lower() == 'y':
+            session.add(new_book)
+            session.commit()
+        else:
+            print("Book not added")    
+        
 
 def search():
     pass
