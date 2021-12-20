@@ -88,13 +88,51 @@ def search_book():
             print('ID Not Found')
         
     elif answer == '2':
-        pass
+        answer = input("What title would you like to search for?:    ")
+        books = session.query(Book).filter_by(title=answer).all()
+        if(books):
+            for book in books:
+                print(book)
+        else:
+            print("Book not found")
+        
     elif answer == '3':
+        answer = input("What author would you like to search for?:    ")
+        books = session.query(Book).filter_by(author=answer).all()
+        if(books):
+            for book in books:
+                print(book)
+        else:
+            print("Author not found")
         pass
     elif answer == '4':
-        pass
+        answer = input("What date would you like to search? format m/d/y :     ")
+        try:
+            date = datetime.datetime.strptime(answer, "%m/%d/%Y").date()
+        except ValueError:
+            print("Invalid Input")
+        else:
+            books = session.query(Book).filter_by(published_date=date).all()
+            if books:
+                for book in books:
+                    print(book)
+            else:
+                print("Date not found")
+
     elif answer == '5':
-        pass
+        answer = input("Input the price of the book without special characters:    ")
+        try:
+            answer = float(answer)
+        except ValueError:
+            print("Invalid Input")
+        else:
+            books = session.query(Book).filter_by(price=answer).all()
+            if books:
+                for book in books:
+                    print(book)
+            else:
+                print("There is no book for that price.")
+        
     else:
         print("Invalid Input")
     
