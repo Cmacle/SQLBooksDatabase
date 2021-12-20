@@ -2,13 +2,14 @@ from models import(Base, session,
                     Book, engine)
 import csv
 import datetime
+import re
 
 def menu():
     
     print('''\nChoose an option: 
             \r1: Add book
             \r2: Search 
-            \r3: Analysis 
+            \r3: Delete 
             \r4: View all books
             \r5: Exit
             ''')
@@ -32,8 +33,15 @@ def add_csv():
             new_book = Book(title=title, author=author, published_date=date, price=price)
             session.add(new_book)
         session.commit()
+
+def print_ids():
+    books = session.query(Book).all()
+    ids = [str(book.id) for book in books]
+    
+    print(ids)
+    return ids
         
-def add():
+def add_book():
     if input("\nUse this to add a new book to the database.\n Would you like to continue? y/n   ").lower() == 'y':
         new_book = Book()
         new_book.title = input("What is the title of the book?:    ")
@@ -61,7 +69,7 @@ def add():
             print("Book not added")    
         
 
-def search():
+def search_book():
     print('''\nWhat would you like to search by?
             \r1: ID
             \r2: Title
@@ -72,22 +80,29 @@ def search():
     )
     answer = input("")
     if answer == '1':
+        ids = print_ids()
+        answer = input('Choose an ID from the list:   ')
+        if answer in ids:
+            book = session.query(Book).filter_by(id=answer).one()
+            print(book)
+        else:
+            print('ID Not Found')
+        
+    elif answer == '2':
         pass
-    if answer == '2':
+    elif answer == '3':
         pass
-    if answer == '3':
+    elif answer == '4':
         pass
-    if answer == '4':
-        pass
-    if answer == '5':
+    elif answer == '5':
         pass
     else:
         print("Invalid Input")
     
-def analysis():
+def delete_book():
     pass
 
-def view():
+def view_book():
     for book in session.query(Book):
         print(f'{book.id}) Title = {book.title} Author = {book.author} Published = {book.published_date} Price = {book.price}')
     
@@ -103,13 +118,13 @@ if __name__ == '__main__':
 
         answer = menu()
         if answer == '1':
-            add()
+            add_book()
         elif answer == '2':
-            search()
+            search_book()
         elif answer == '3':
-            analysis()
+            delete_book()
         elif answer == '4':
-            view()
+            view_book()
         elif answer == '5':
             print('Thank you for using the program!')
             break
