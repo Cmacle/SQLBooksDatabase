@@ -3,8 +3,7 @@ from models import(Base, session,
 import csv
 import datetime
 
-def menu():
-    
+def menu(): 
     print('''\nChoose an option: 
             \r1: Add book
             \r2: Search 
@@ -20,7 +19,6 @@ def clean_date(date_str):
 def clean_price(price_str):
     return float(price_str)
     
-
 def add_csv():
     with open('suggested_books.csv') as csvfile:
         data = csv.reader(csvfile)
@@ -36,7 +34,6 @@ def add_csv():
 def print_ids():
     books = session.query(Book).all()
     ids = [str(book.id) for book in books]
-    
     print(ids)
     return ids
         
@@ -67,7 +64,6 @@ def add_book():
         else:
             print("Book not added")    
         
-
 def search_book():
     print('''\nWhat would you like to search by?
             \r1: ID
@@ -75,8 +71,7 @@ def search_book():
             \r3: Author
             \r4: Date Published
             \r5: Price
-            '''
-    )
+            ''')
     answer = input("")
     if answer == '1':
         ids = print_ids()
@@ -85,8 +80,7 @@ def search_book():
             book = session.query(Book).filter_by(id=answer).one()
             print(book)
         else:
-            print('ID Not Found')
-        
+            print('ID Not Found')  
     elif answer == '2':
         answer = input("What title would you like to search for?:    ")
         books = session.query(Book).filter_by(title=answer).all()
@@ -94,8 +88,7 @@ def search_book():
             for book in books:
                 print(book)
         else:
-            print("Book not found")
-        
+            print("Book not found")   
     elif answer == '3':
         answer = input("What author would you like to search for?:    ")
         books = session.query(Book).filter_by(author=answer).all()
@@ -118,7 +111,6 @@ def search_book():
                     print(book)
             else:
                 print("Date not found")
-
     elif answer == '5':
         answer = input("Input the price of the book without special characters:    ")
         try:
@@ -131,28 +123,35 @@ def search_book():
                 for book in books:
                     print(book)
             else:
-                print("There is no book for that price.")
-        
+                print("There is no book for that price.")   
     else:
         print("Invalid Input")
     
 def delete_book():
-    pass
+    print('This will permanently delete a book from the database.')
+    ids = print_ids()
+    answer = input('Choose an ID from the list to be deleted:    ')
+    if answer in ids:
+        book = session.query(Book).filter_by(id=answer).one()
+        print(book)
+        if input('Are you sure you would like to delete this book? y/n:    ').lower() == 'y':
+            session.delete(book)
+            session.commit()
+            print('Book Deleted')
+        else:
+            print("Deletion Aborted")
+    else:
+        print('''\nThat ID does not exist.
+                \rtip: Use the search function to find the ID
+                \rof the book you'd like to delete.''')
 
 def view_book():
     for book in session.query(Book):
         print(f'{book.id}) Title = {book.title} Author = {book.author} Published = {book.published_date} Price = {book.price}')
     
-
-
-
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
-
-
     while True:
-        
-
         answer = menu()
         if answer == '1':
             add_book()
