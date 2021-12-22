@@ -38,31 +38,30 @@ def print_ids():
     return ids
         
 def add_book():
-    if input("\nUse this to add a new book to the database.\n Would you like to continue? y/n   ").lower() == 'y':
-        new_book = Book()
-        new_book.title = input("What is the title of the book?:    ")
-        new_book.author = input("Who is the author of the book?:    ")
-        while True:
-            date_str = input("When was the book published? format m/d/y ex.4/5/2000  :   ")
-            try:
-                new_book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y").date()
-            except ValueError:
-                print("Invalid Input")
-            else:
-                break
-        while True:
-            try:
-                new_book.price = float(input("What is the cost? No special characters. ex) 29.99:     "))
-            except TypeError:
-                print("Invalid Input")
-            else:
-                break
-        print(new_book)
-        if input("Do you want to add this book?  y/n     ").lower() == 'y':
-            session.add(new_book)
-            session.commit()
+    new_book = Book()
+    new_book.title = input("What is the title of the book?:    ")
+    new_book.author = input("Who is the author of the book?:    ")
+    while True:
+        date_str = input("When was the book published? format m/d/y ex.4/5/2000  :   ")
+        try:
+            new_book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y").date()
+        except ValueError:
+            print("Invalid Input")
         else:
-            print("Book not added")    
+            break
+    while True:
+        try:
+            new_book.price = float(input("What is the cost? No special characters. ex) 29.99:     "))
+        except TypeError:
+            print("Invalid Input")
+        else:
+            break
+    print(new_book)
+    if input("Do you want to add this book?  y/n     ").lower() == 'y':
+        session.add(new_book)
+        session.commit()
+    else:
+        print("Book not added")    
         
 def search_book():
     print('''\nWhat would you like to search by?
