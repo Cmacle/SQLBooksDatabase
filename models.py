@@ -23,4 +23,4 @@ class Book(Base):
     file_size = Column('File Size', Integer)
 
     def __repr__(self):
-        return f'ID= {self.id},Title= {self.title},Author= {self.author},Published= {self.published_date},Price= {self.price}'
+        return f'ID= {self.id},Title= {self.title},Author= {self.author},Published= {self.published_date},Price= {self.price},File Type= {self.file_type},File Size= {self.file_size}'
