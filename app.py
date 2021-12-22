@@ -2,6 +2,8 @@ from models import(Base, session,
                     Book, engine)
 import csv
 import datetime
+import tkinter
+from tkinter import filedialog
 
 def menu(): 
     print('''\nChoose an option: 
@@ -56,6 +58,15 @@ def add_book():
             print("Invalid Input")
         else:
             break
+    if input('Would you like to add the file to the database? y/n:  ').lower()=='y':
+        root = tkinter.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename()
+    else:
+        new_book.file = None
+        new_book.file_type = None
+        new_book.file_size = None
+        
     print(new_book)
     if input("Do you want to add this book?  y/n     ").lower() == 'y':
         session.add(new_book)

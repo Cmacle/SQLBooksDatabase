@@ -2,7 +2,7 @@ from sqlalchemy import (create_engine, Column,
                          Integer, String, Date)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.sqltypes import Float, Date
+from sqlalchemy.sql.sqltypes import BLOB, Float, Date
 
 
 engine = create_engine('sqlite:///books.db', echo=False)
@@ -18,6 +18,9 @@ class Book(Base):
     author = Column('Author', String)
     published_date = Column('Published', Date)
     price = Column('Price', Float)
+    file = Column('File', BLOB)
+    file_type = Column('File Type', String)
+    file_size = Column('File Size', Integer)
 
     def __repr__(self):
         return f'ID= {self.id},Title= {self.title},Author= {self.author},Published= {self.published_date},Price= {self.price}'
