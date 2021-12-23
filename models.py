@@ -20,7 +20,7 @@ class Book(Base):
     price = Column('Price', Float)
     file = Column('File', BLOB)
     file_type = Column('File Type', String)
-    file_size = Column('File Size', Integer)
+    file_size = Column('File Size', Float)
 
     def __repr__(self):
         return f'ID= {self.id},Title= {self.title},Author= {self.author},Published= {self.published_date},Price= {self.price},File Type= {self.file_type},File Size= {self.file_size}'

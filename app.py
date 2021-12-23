@@ -2,8 +2,10 @@ from models import(Base, session,
                     Book, engine)
 import csv
 import datetime
+import os.path
 import tkinter
 from tkinter import filedialog
+
 
 def menu(): 
     print('''\nChoose an option: 
@@ -62,11 +64,14 @@ def add_book():
         root = tkinter.Tk()
         root.withdraw()
         file_path = filedialog.askopenfilename()
+        with open(file_path) as file:
+            new_book.file_type = os.path.splitext(file_path)[1]
+            new_book.file_size = os.path.getsize(file_path)
     else:
         new_book.file = None
         new_book.file_type = None
         new_book.file_size = None
-        
+
     print(new_book)
     if input("Do you want to add this book?  y/n     ").lower() == 'y':
         session.add(new_book)
