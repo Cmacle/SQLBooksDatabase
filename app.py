@@ -135,6 +135,7 @@ def search_book():
                     print(book)
             else:
                 print("Date not found")
+                
     elif answer == '5':
         answer = input("Input the price of the book without special characters:    ")
         try:
