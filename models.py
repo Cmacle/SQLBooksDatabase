@@ -19,6 +19,7 @@ class Book(Base):
     published_date = Column('Published', Date)
     price = Column('Price', Float)
     file = Column('File', BLOB)
+    file_name = Column('File Name', String)
     file_type = Column('File Type', String)
     file_size = Column('File Size', Float)
 
