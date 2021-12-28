@@ -13,7 +13,8 @@ def menu():
             \r2: Search 
             \r3: Delete 
             \r4: View all books
-            \r5: Exit
+            \r5: Export File
+            \r6: Exit
             ''')
     return input("")
 
@@ -34,6 +35,10 @@ def add_csv():
             new_book = Book(title=title, author=author, published_date=date, price=price)
             session.add(new_book)
         session.commit()
+
+def write_file(data, filename):
+    with open(filename, 'wb') as file:
+        file.write(data)
 
 def print_ids():
     books = session.query(Book).all()
@@ -64,13 +69,16 @@ def add_book():
         root = tkinter.Tk()
         root.withdraw()
         file_path = filedialog.askopenfilename()
-        with open(file_path) as file:
-            new_book.file_type = os.path.splitext(file_path)[1]
-            new_book.file_size = os.path.getsize(file_path)
+        new_book.file_type = os.path.splitext(file_path)[1]
+        new_book.file_size = os.path.getsize(file_path)
+        new_book.file_name = os.path.basename(file_path)
+        with open(file_path, 'rb') as file:
+            new_book.file = file.read()
     else:
         new_book.file = None
         new_book.file_type = None
         new_book.file_size = None
+        new_book.file_name = None
 
     print(new_book)
     if input("Do you want to add this book?  y/n     ").lower() == 'y':
@@ -86,6 +94,7 @@ def search_book():
             \r3: Author
             \r4: Date Published
             \r5: Price
+            \r6: File Type
             ''')
     answer = input("")
     if answer == '1':
@@ -112,7 +121,7 @@ def search_book():
                 print(book)
         else:
             print("Author not found")
-        pass
+        
     elif answer == '4':
         answer = input("What date would you like to search? format m/d/y :     ")
         try:
@@ -139,6 +148,15 @@ def search_book():
                     print(book)
             else:
                 print("There is no book for that price.")   
+
+    elif answer == '6':
+        answer = input("What file type would you like to search for? ex) .txt .epub .pdf:    ").lower()
+        books = session.query(Book).filter_by(file_type=answer).all()
+        if(books):
+            for book in books:
+                print(book)
+        else:
+            print("Author not found")
     else:
         print("Invalid Input")
     
@@ -163,7 +181,32 @@ def delete_book():
 def view_book():
     for book in session.query(Book):
         print(f'{book.id}) Title = {book.title} Author = {book.author} Published = {book.published_date} Price = {book.price}')
-    
+
+def export_book():
+    print('Export a book file from the database, the file will remain in the database.')
+    ids = print_ids()
+    answer = input('Choose an ID from the list to be exported:    ')
+    if answer in ids:
+        book = session.query(Book).filter_by(id=answer).one()
+        if(book.file):
+            print(book)
+            input('Choose the folder to save the file to press enter to proceed')
+            root = tkinter.Tk()
+            root.withdraw()
+            file_path = filedialog.askdirectory()
+            data = book.file
+            filename = file_path +'/'+ book.file_name
+            print(filename)
+            write_file(data, filename)
+
+        else:
+            print("That entry does not contain a file, choose a different entry.")    
+
+    else:
+        print('''\nThat ID does not exist.
+                \rtip: Use the search function to find the ID
+                \rof the book you'd like to delete.''')
+
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     while True:
@@ -177,6 +220,8 @@ if __name__ == '__main__':
         elif answer == '4':
             view_book()
         elif answer == '5':
+            export_book()
+        elif answer == '6':
             print('Thank you for using the program!')
             break
         else:
