@@ -11,10 +11,11 @@ def menu():
     print('''\nChoose an option: 
             \r1: Add book
             \r2: Search 
-            \r3: Delete 
-            \r4: View all books
-            \r5: Export File
-            \r6: Exit
+            \r3: Delete
+            \r4: Edit 
+            \r5: View all books
+            \r6: Export File
+            \r7: Exit
             ''')
     return input("")
 
@@ -66,6 +67,7 @@ def add_book():
         else:
             break
     if input('Would you like to add the file to the database? y/n:  ').lower()=='y':
+        input("Press enter to open a window to select your input file. note: File may be behind other windows.")
         root = tkinter.Tk()
         root.withdraw()
         file_path = filedialog.askopenfilename()
@@ -208,6 +210,99 @@ def export_book():
                 \rtip: Use the search function to find the ID
                 \rof the book you'd like to delete.''')
 
+def edit_book():
+    ids = print_ids()
+    id_answer = input("Choose an ID from the list to edit:   ")
+    if id_answer in ids:
+        book = session.query(Book).filter_by(id=id_answer).one()
+        print(book)
+        if input("Is this the book you'd like to edit? y/n:   ").lower() == 'y':
+            print('''\nWhat would you like to edit?
+            \r1: Title
+            \r2: Author
+            \r3: Date Published
+            \r4: Price
+            \r5: File
+            ''')
+            function_answer = input("")
+            if function_answer == '1':
+                print(f'Current Title: {book.title}')
+                new_title = input("What would you like the new title to be?:     ")
+                book.title = new_title
+                print(book)
+                if input('Confirm this change? y/n:    ').lower() == 'y':
+                    session.add(book)
+                    session.commit()
+                    print('--Update Saved--')
+                else:
+                    print('Edit Canceled')
+            if function_answer == '2':
+                print(f'Current Author: {book.author}')
+                new_author = input("Who would you like the new author to be?:     ")
+                book.author = new_author
+                print(book)
+                if input('Confirm this change? y/n:    ').lower() == 'y':
+                    session.add(book)
+                    session.commit()
+                    print('--Update Saved--')
+                else:
+                    print('Edit Canceled')
+            if function_answer == '3':
+                print(f'Current Date: {book.published_date}')
+                while True:
+                    date_str = input("When was the book published? format m/d/y ex.4/5/2000  :   ")
+                    try:
+                        book.published_date = datetime.datetime.strptime(date_str, "%m/%d/%Y").date()
+                    except ValueError:
+                        print("Invalid Input")
+                    else:
+                         break
+                print(book)
+                if input('Confirm this change? y/n:    ').lower() == 'y':
+                    session.add(book)
+                    session.commit()
+                    print('--Update Saved--')
+                else:
+                    print('Edit Canceled')
+            if function_answer == '4':
+                print(f'Current Price: {book.price}')
+                while True:
+                    try:
+                        book.price = float(input("What is the cost? No special characters. ex) 29.99:     "))
+                    except TypeError:
+                        print("Invalid Input")
+                    else:
+                        break
+                print(book)
+                if input('Confirm this change? y/n:    ').lower() == 'y':
+                    session.add(book)
+                    session.commit()
+                    print('--Update Saved--')
+                else:
+                    print('Edit Canceled')
+            if function_answer == '5':
+                print(f'Current File Information: Filename: {book.file_name} File Size: {book.file_size}')
+                input("Press enter to open a window to select your input file. note: File may be behind other windows.")
+                root = tkinter.Tk()
+                root.withdraw()
+                file_path = filedialog.askopenfilename()
+                book.file_type = os.path.splitext(file_path)[1]
+                book.file_size = os.path.getsize(file_path)
+                book.file_name = os.path.basename(file_path)
+                with open(file_path, 'rb') as file:
+                    book.file = file.read()
+                print(book)
+                if input('Confirm this change? y/n:    ').lower() == 'y':
+                    session.add(book)
+                    session.commit()
+                    print('--Update Saved--')
+                else:
+                    print('Edit Canceled')
+        else:
+            print('Edit Canceled')
+    else:
+        print("ID not found.")
+
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     while True:
@@ -219,10 +314,12 @@ if __name__ == '__main__':
         elif answer == '3':
             delete_book()
         elif answer == '4':
-            view_book()
+            edit_book()
         elif answer == '5':
-            export_book()
+            view_book()
         elif answer == '6':
+            export_book()
+        elif answer == '7':
             print('Thank you for using the program!')
             break
         else:
